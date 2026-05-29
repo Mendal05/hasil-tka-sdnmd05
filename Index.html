@@ -13,46 +13,201 @@
     Nilai TKA SDN Menteng Dalam 05 Pagi
   </title>
 
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+  <style>
+
+    body{
+      margin:0;
+      padding:0;
+
+      font-family:Arial;
+
+      background:
+      linear-gradient(
+        135deg,
+        #1e3a8a,
+        #0f172a
+      );
+
+      height:100vh;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .card{
+
+      background:white;
+
+      width:350px;
+
+      padding:30px;
+
+      border-radius:20px;
+
+      text-align:center;
+
+      box-shadow:
+      0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h1{
+      color:#1e3a8a;
+      margin-bottom:5px;
+    }
+
+    h2{
+      font-size:18px;
+      color:#555;
+    }
+
+    input{
+
+      width:100%;
+
+      padding:12px;
+
+      margin-top:20px;
+
+      box-sizing:border-box;
+
+      border-radius:10px;
+
+      border:1px solid #ccc;
+    }
+
+    button{
+
+      width:100%;
+
+      padding:12px;
+
+      margin-top:10px;
+
+      border:none;
+
+      border-radius:10px;
+
+      background:#2563eb;
+
+      color:white;
+
+      font-size:16px;
+
+      cursor:pointer;
+    }
+
+    #hasil{
+      margin-top:20px;
+      text-align:left;
+    }
+
+    .data{
+      background:#f1f5f9;
+      padding:15px;
+      border-radius:10px;
+      line-height:1.8;
+    }
+
+  </style>
+
 </head>
 
 <body>
 
-<div class="container">
+<div class="card">
 
-  <div class="card">
+  <h1>Nilai TKA</h1>
 
-    <h1>Nilai TKA</h1>
+  <h2>SDN Menteng Dalam 05 Pagi</h2>
 
-    <h2>SDN Menteng Dalam 05 Pagi</h2>
+  <input
+    type="text"
+    id="nisn"
+    placeholder="Masukkan NISN"
+  >
 
-    <p>
-      Masukkan NISN untuk melihat nilai
-    </p>
+  <button onclick="cekNilai()">
+    Lihat Nilai
+  </button>
 
-    <!-- INPUT NISN -->
-    <input
-      type="text"
-      id="nisn"
-      placeholder="Masukkan NISN"
-    >
-
-    <!-- BUTTON -->
-    <button onclick="cekNilai()">
-      Lihat Nilai
-    </button>
-
-    <!-- HASIL -->
-    <div id="hasil"></div>
-
-  </div>
+  <div id="hasil"></div>
 
 </div>
 
-<script src="script.js"></script>
+<script>
+
+const URL_API =
+'https://script.google.com/macros/s/PASTE_URL_APPS_SCRIPT/exec';
+
+async function cekNilai(){
+
+  const nisn =
+    document.getElementById('nisn').value;
+
+  const hasil =
+    document.getElementById('hasil');
+
+  hasil.innerHTML =
+    'Loading...';
+
+  try{
+
+    const response =
+      await fetch(
+        `${URL_API}?nisn=${nisn}`
+      );
+
+    const data =
+      await response.json();
+
+    if(data.status === 'success'){
+
+      hasil.innerHTML = `
+      <div class="data">
+
+        <p>
+        <strong>Nama:</strong>
+        ${data.nama}
+        </p>
+
+        <p>
+        <strong>Matematika:</strong>
+        ${data.matematika}
+        </p>
+
+        <p>
+        <strong>Bahasa Indonesia:</strong>
+        ${data.indonesia}
+        </p>
+
+        <p>
+        <strong>Rata-rata:</strong>
+        ${data.rata}
+        </p>
+
+        <p>
+        <strong>Ranking:</strong>
+        ${data.ranking}
+        </p>
+
+      </div>
+      `;
+
+    }else{
+
+      hasil.innerHTML =
+      'NISN tidak ditemukan';
+    }
+
+  }catch(error){
+
+    hasil.innerHTML =
+    'Terjadi kesalahan';
+  }
+}
+
+</script>
 
 </body>
 </html>
